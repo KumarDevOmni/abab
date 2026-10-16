@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Durga Puja Welcome</title>
+<style>
+:root{--bg:#2a0a0e;--panel:#3d1219;--gold:#e0b04a;--ivory:#f6ecd6;--red:#8f1d14;color-scheme:dark;--u:min(1vh,.56vw)}
+@media (orientation:portrait){:root{--u:min(1vh,1.05vw)}}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#2a0a0e;color:var(--ivory);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+#stage{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,#4a1219 0,#2a0a0e 70%);cursor:pointer}
+#bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;overflow:hidden}
+#bg.on{opacity:.5}
+#bg i{position:absolute;inset:0;background-repeat:no-repeat}
+#bg i.blur{background-size:cover;background-position:center;filter:blur(40px) brightness(.6);transform:scale(1.15)}
+#bg i.sharp{background-size:contain;background-position:88% center}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2.2);text-align:center;padding:calc(6vh + env(safe-area-inset-top,0px)) 6vw calc(6vh + env(safe-area-inset-bottom,0px));opacity:0;transform:scale(1.05);transition:opacity 1.2s ease,transform 7s linear;pointer-events:none}
+.scene.on{opacity:1;transform:scale(1)}
+.scene>*{opacity:0;transform:translateY(20px);transition:opacity .9s ease,transform .9s ease}
+.scene.on>*{opacity:1;transform:none}
+.scene.on>*:nth-child(2){transition-delay:.4s}.scene.on>*:nth-child(3){transition-delay:.8s}.scene.on>*:nth-child(4){transition-delay:1.2s}.scene.on>*:nth-child(5){transition-delay:1.6s}
+.tag{font-size:calc(var(--u)*2.4);letter-spacing:calc(var(--u)*.5);color:var(--gold)}
+h1{font-size:calc(var(--u)*15);font-weight:400;line-height:1.05}
+h2{font-size:calc(var(--u)*8);font-weight:400;color:var(--gold);line-height:1.1}
+h2.name{color:var(--ivory);font-size:calc(var(--u)*9);margin:calc(var(--u)*2) 0}
+.sub{font-size:calc(var(--u)*4)}.gold{color:var(--gold)}
+#bond{background:rgba(143,29,20,.78)}
+#bond h2{color:var(--ivory);font-size:calc(var(--u)*10);line-height:1.15}
+.row{display:flex;gap:2.5vw;width:100%}
+.card{flex:1;background:var(--panel);border-top:calc(var(--u)*.7) solid var(--gold);border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*4) calc(var(--u)*2.5)}
+.card b{display:block;font-size:calc(var(--u)*5);font-weight:400;color:var(--gold);margin-bottom:calc(var(--u)*1.5)}
+.card span{font-size:calc(var(--u)*3.2)}
+.split{display:flex;align-items:center;gap:calc(var(--u)*8);width:100%;text-align:left;justify-content:center}
+#photo{flex:none;width:calc(var(--u)*36);height:calc(var(--u)*46);border:calc(var(--u)*.8) solid var(--gold);border-radius:calc(var(--u)*1.5);background:var(--panel) center 20%/cover no-repeat;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--gold);font-size:calc(var(--u)*2.6)}
+.petal{position:absolute;top:-5vh;width:calc(var(--u)*1.8);height:calc(var(--u)*1.8);border-radius:50% 0 50% 0;opacity:.8;animation:fall linear infinite;pointer-events:none}
+@keyframes fall{to{transform:translate(8vw,110vh) rotate(540deg)}}
+#hint{position:fixed;right:2vw;bottom:calc(2vh + env(safe-area-inset-bottom,0px));font:inherit;font-size:14px;color:var(--ivory);background:rgba(0,0,0,.5);border:1px solid var(--gold);border-radius:8px;padding:6px 12px;cursor:pointer;transition:opacity 1s}
+@media (orientation:portrait){
+  #bg i.sharp{inset:auto;left:0;right:0;top:12%;aspect-ratio:1/1;background-size:cover;background-position:center;-webkit-mask-image:radial-gradient(closest-side,#000 55%,transparent 100%);mask-image:radial-gradient(closest-side,#000 55%,transparent 100%)}
+  #bg.on{opacity:.4}
+  h1{font-size:calc(var(--u)*14)}
+  h2{font-size:calc(var(--u)*7.5)}
+  h2.name{font-size:calc(var(--u)*8.5);margin:calc(var(--u)*1.5) 0}
+  .sub{font-size:calc(var(--u)*4.4)}
+  .tag{font-size:calc(var(--u)*3)}
+  .split{flex-direction:column;text-align:center;gap:calc(var(--u)*5)}
+  #photo{width:calc(var(--u)*54);height:calc(var(--u)*66)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*3)}
+  .card b{font-size:calc(var(--u)*6)}
+  .card span{font-size:calc(var(--u)*4)}
+  #bond h2{font-size:calc(var(--u)*9)}
+}
+</style></head>
+<body>
+<div id="stage"><div id="bg"><i class="blur"></i><i class="sharp"></i></div></div>
+<button id="hint">Fullscreen (F)</button>
+<script src="guests.js"></script>
+<script>
+(function(){
+var S=window.SITE||{},G=window.GUESTS||[];
+var id=new URLSearchParams(location.search).get('id');
+var g=G.filter(function(x){return x.id===id})[0]||G[0];
+if(!g){document.body.textContent='No guests found in guests.js';return}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+document.title='Durga Puja – '+g.name;
+var stage=document.getElementById('stage'),bg=document.getElementById('bg'),h='';
+h+='<section class="scene"><p class="tag">DURGA PUJA '+esc(S.year)+' · '+esc(String(S.pandal||'').toUpperCase())+'</p><h1>Welcome</h1><h2>Sri '+esc(g.name)+'</h2><p class="sub">'+esc(g.welcomeLine)+'</p><p class="sub gold">Shubho Sharodiya</p></section>';
+h+='<section class="scene"><div class="split"><div id="photo"></div><div><p class="tag">OUR CHIEF GUEST</p><h2 class="name">'+esc(g.name)+'</h2><p class="sub">'+esc(g.title)+'</p><p class="sub gold" style="margin-top:calc(var(--u)*2)">'+esc(g.highlight)+'</p></div></div></section>';
+if(g.cards&&g.cards.length){
+  h+='<section class="scene" data-bg><h2 style="color:var(--ivory)">A Journey of Public Service</h2><div class="row">'+g.cards.map(function(c){return '<div class="card"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span></div>'}).join('')+'</div><p class="sub gold">'+esc(g.footer)+'</p></section>';
+}
+h+='<section class="scene" data-bg id="bond"><h2>'+(S.bondLines||[]).map(esc).join('<br>')+'</h2><p class="sub" style="color:#f2cf7a">'+esc(S.thanksLine)+'</p></section>';
+h+='<section class="scene"><h1>Thank You</h1><h2>'+esc(S.closing)+'</h2><p class="sub">'+esc(S.pandal)+' Puja Committee</p></section>';
+stage.insertAdjacentHTML('beforeend',h);
+var scenes=[].slice.call(stage.querySelectorAll('.scene')),i=0,hasPhoto=false,timer;
+function show(n){i=(n+scenes.length)%scenes.length;scenes.forEach(function(s,k){s.classList.toggle('on',k===i)});bg.classList.toggle('on',hasPhoto&&scenes[i].hasAttribute('data-bg'))}
+function start(){clearInterval(timer);timer=setInterval(function(){show(i+1)},(S.seconds||8)*1000)}
+show(0);start();
+stage.addEventListener('click',function(){show(i+1);start()});
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){show(i+1);start()}else if(e.key==='ArrowLeft'){show(i-1);start()}else if(e.key==='f'||e.key==='F')fs()});
+// photo
+var url='photos/'+encodeURIComponent(g.photo||''),ph=document.getElementById('photo'),im=new Image();
+im.onload=function(){ph.style.backgroundImage='url("'+url+'")';[].forEach.call(bg.children,function(e){e.style.backgroundImage='url("'+url+'")'});hasPhoto=true};
+im.onerror=function(){ph.textContent='Add photo to photos/'+(g.photo||'')};
+im.src=url;
+// marigold petals
+var cols=['#f0a020','#e0661a'];
+for(var p=0;p<22;p++){var d=document.createElement('div');d.className='petal';d.style.left=(Math.random()*100)+'vw';d.style.animationDuration=(9+Math.random()*10)+'s';d.style.animationDelay=(-Math.random()*15)+'s';d.style.background=cols[p%2];stage.appendChild(d)}
+function fs(){var e=document.documentElement;try{(e.requestFullscreen||e.webkitRequestFullscreen).call(e)}catch(x){}}
+document.getElementById('hint').onclick=fs;
+setTimeout(function(){document.getElementById('hint').style.opacity=0},6000);
+})();
+</script></body></html>
